@@ -64,22 +64,37 @@ suspeitosRoutes.get("/:id", (req, res) => {
         return res.status(200).json(suspeito);
 });
 
-// Rota PUT: Atualizar suspeito pelo ID
 
+// Rota para atualizar um suspeito pelo id
 suspeitosRoutes.put("/:id", (req, res) => {
-    const { id } = req.params;
-    const { name, email } = req.body;
-    const suspeito = suspeitos.find((suspeito) => suspeito.id === Number(id));
-if (!suspeito) {
-    return res.status(404).json({ message: "suspeito not found!" });
-}
+    const { id } = req.params; 
+    const { nome, profissao, aposta, nivel } = req.body;
 
-if (!name || !email) {
-    return res.status(400).json({ message: "Name and email are required!" });
-}
-    suspeito.name = name;
-    suspeito.email = email;
-    return res.status(200).json(suspeito);
+    const suspeito = suspeitos.find((suspeito) => suspeito.id === Number(id));
+
+    if (!suspeito) {
+        return res.status(404).json({ message: `Suspeito não encontrado!` });
+    }
+
+    if (!nome || !profissao) {
+        return res.status(400).json({ message: "Nome e profissão são obrigatórios!" });
+    }
+
+    if (nivel && !["Baixo", "Médio", "Alto"].includes(nivel)) {
+        return res.status(400).json({ message: "o suspeito não tem nível!" });
+    }
+
+    // Atualizar os campos do suspeito 
+
+    suspeito.nome = nome || suspeito.nome;
+    suspeito.profissao = profissao || suspeito.profissao;
+    suspeito.aposta = aposta !== undefined ? aposta : suspeito.aposta; // Mantém o valor se não for passado
+    suspeito.nivel = nivel || suspeito.nivel;
+
+    return res.status(200).json({
+        message: "Suspeito atualizado com sucesso!",
+        suspeito,
+    });
 });
 
 suspeitosRoutes.delete("/:id", (req, res) => {
