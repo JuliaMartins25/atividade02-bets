@@ -84,7 +84,7 @@ suspeitosRoutes.put("/:id", (req, res) => {
         return res.status(400).json({ message: "o suspeito não tem nível!" });
     }
 
-    // Atualizar os campos do suspeito 
+   // Atualizar os campos do suspeito 
 
     suspeito.nome = nome || suspeito.nome;
     suspeito.profissao = profissao || suspeito.profissao;
@@ -97,14 +97,16 @@ suspeitosRoutes.put("/:id", (req, res) => {
     });
 });
 
+// Deletar o sujeito pelo id
 suspeitosRoutes.delete("/:id", (req, res) => {
 const { id } = req.params;
+
 const suspeito = suspeitos.find((suspeito) => suspeito.id === Number(id));
 if (!suspeito) {
-    return res.status(404).json({ message: "suspeito not found!" });
+    return res.status(404).json({ message: "suspeito não encontrado" });
 }
 suspeitos = suspeitos.filter((suspeito) => suspeito.id !== Number(id));
-return res.status(200).json({ message: "suspeito deleted successfully!" });
+return res.status(200).json({ message: "suspeito deletado com sucesso!" });
 });
 
 export default suspeitosRoutes;
